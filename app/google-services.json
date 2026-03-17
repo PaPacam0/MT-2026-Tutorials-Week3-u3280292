@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "746327103885",
+    "project_id": "mobile-tech-ed53a",
+    "storage_bucket": "mobile-tech-ed53a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746327103885:android:816dc3c989a8cdb0e645c4",
+        "android_client_info": {
+          "package_name": "com.example.myfirstapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQMyTI8HUN5ePixvAfA0TNdioyGXBdWPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
