@@ -5,41 +5,55 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity">
+    tools:context=".MLKitActivity">
 
-    <Button
-        android:id="@+id/buttonUIEvent"
+    <TextView
+        android:id="@+id/textViewMLKit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="100dp"
-        android:text="UI and Events"
+        android:layout_marginEnd="50dp"
+        android:text="Tap Open Camera or Load to have an image for ML Kit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonLocationServices"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="100dp"
-        android:text="Location Services"
+    <ImageView
+        android:id="@+id/imageViewMLKit"
+        android:layout_width="210dp"
+        android:layout_height="280dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonUIEvent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewMLKit"
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <Button
-        android:id="@+id/buttonMLK"
+        android:id="@+id/buttonOpenCam"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="100dp"
-        android:text="Firebase ML Kit"
+        android:onClick="openCamera"
+        android:text="Open Camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLocationServices" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewMLKit" />
+
+    <Button
+        android:id="@+id/buttonLoadIm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="100dp"
+        android:onClick="loadImage"
+        android:text="Load Image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonOpenCam" />
 </androidx.constraintlayout.widget.ConstraintLayout>
