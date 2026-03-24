@@ -32,6 +32,14 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -103,38 +111,70 @@ public class MLKitActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 if (image != null) {
-                                    processImageFromBarcodeReader(image);
+                                    processImageFromContentReader(image);
+                                    processImageFromTextReader(image);
                                 }
                             }
                         }
 
                     });
-    public void processImageFromBarcodeReader (InputImage image) {
-        BarcodeScannerOptions options =
-                new BarcodeScannerOptions.Builder()
-                        .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build();
-        BarcodeScanner scanner = BarcodeScanning.getClient(options);
-        Task<List<Barcode>> result = scanner.process(image)
-                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                    @Override
-                    public void onSuccess(List<Barcode> barcodes) {
-                        textViewOutput.append(Html.fromHtml("<font color='navy'>" +
-                                "<b>Detected barcode:</b></font><br>", Html.FROM_HTML_MODE_LEGACY));
-                        String result = "";
-                        for (Barcode barcode : barcodes) {
-                            result = barcode.getRawValue();
-                            textViewOutput.append(result + "\n");
-                        }
-                        if (result.length() < 2) {
-                            textViewOutput.append(" Barcode not found.\n");
-                        }
-                    }
-                })
+    public void processImageFromContentReader(InputImage image) {
+        ImageLabeler labeler = ImageLabeling.getClient(
+                ImageLabelerOptions.DEFAULT_OPTIONS);
+        labeler.process(image)
+                .addOnSuccessListener(
+                        new OnSuccessListener<List<ImageLabel>>() {
+                            @Override
+                            public void onSuccess(List<ImageLabel> labels) {
+                                if (labels.size() == 0) {
+                                    textViewOutput.append("Nothing found in the image\n");
+                                    return;
+                                }
+                                textViewOutput.append(Html.fromHtml("<font color='navy'><b>Detected image content:</b></font><br>",
+                                Html.FROM_HTML_MODE_LEGACY));
+                                int counter = 1;
+                                for (ImageLabel label : labels) {
+                                    String result = label.getText();
+                                    float confidence = label.getConfidence();
+                                    textViewOutput.append(" " +
+                                            counter + ". " + result +
+                                            " (" + String.format("%.1f", confidence * 100.0f) +
+                                            "% confidence)\n");
+                                    counter++;
+                                }
+                            }
+                        })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         textViewOutput.setText("Failed");
                     }
                 });
+    }
+    public void processImageFromTextReader(InputImage image) {
+        TextRecognizer recognizer =
+                TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+        Task<Text> result =
+                recognizer.process(image)
+                        .addOnSuccessListener(new OnSuccessListener<Text>() {
+                            @Override
+                            public void onSuccess(Text visionText) {
+                                textViewOutput.append(Html.fromHtml("<font color='navy'><b>Detected text:</b></font><br>", Html.FROM_HTML_MODE_LEGACY));
+                                // Task completed successfully
+                                String result = visionText.getText();
+                                if (result.length() > 1)
+                                    textViewOutput.append(" " + result + "\n");
+                                else
+                                    textViewOutput.append(" No text found.\n");
+                            }
+                        })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        textViewOutput.setText("Failed");
+                                    }
+                                });
     }
 }
